@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 @SpringBootApplication
-@ComponentScan({"com.ibm.hello.*", "com.ibm.cloud_garage.*", "com.ibm.health"})
+@ComponentScan({ "com.ibm.hello.*", "com.ibm.cloud_garage.*", "com.ibm.health" })
 public class Application extends SpringBootServletInitializer {
     @Autowired
     Environment environment;
@@ -22,7 +22,7 @@ public class Application extends SpringBootServletInitializer {
     private String applicationName;
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class);
     }
 
     @Bean
@@ -42,14 +42,12 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     public io.opentracing.Tracer initTracer() {
-        Configuration.SamplerConfiguration samplerConfig = new Configuration.SamplerConfiguration()
-                .withType("const")
+        Configuration.SamplerConfiguration samplerConfig = new Configuration.SamplerConfiguration().withType("const")
                 .withParam(1);
         Configuration.ReporterConfiguration reporterConfig = Configuration.ReporterConfiguration.fromEnv()
                 .withLogSpans(true);
 
-        return Configuration.fromEnv(this.applicationName)
-                .withSampler(samplerConfig)
-                .withReporter(reporterConfig).getTracer();
+        return Configuration.fromEnv(this.applicationName).withSampler(samplerConfig).withReporter(reporterConfig)
+                .getTracer();
     }
 }
